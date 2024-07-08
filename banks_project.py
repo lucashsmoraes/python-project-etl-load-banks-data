@@ -59,3 +59,13 @@ def transform(df, url):
     df['MC_INR_Billion'] = [np.round(x * exchange_rate['INR'], 2) for x in gdp_list]
     df["MC_USD_Billion"] = gdp_list
     return df
+
+
+'''
+Função responsável por salvar o dataframe final como um arquivo `CSV`
+no caminho fornecido. A função não retorna nada.
+'''
+
+
+def load_to_csv(df, csv_path):
+    df.to_csv(csv_path)
