@@ -2,6 +2,7 @@ from datetime import datetime
 from bs4 import BeautifulSoup
 import requests as req
 import pandas as pd
+import numpy as np
 
 '''
 Função responsável por registrar a mensagem logada em um determinado
@@ -34,9 +35,27 @@ def extract(url, table_attribs):
         col = row.find_all('td')
         if len(col) != 0:
             if col[1].find('a') is not None and '—' not in col[2]:
-                data_dict = {"Bank name": col[1].find_all('a')[1].contents[0],
-                             "Market cap": col[2].contents[0].replace('\n', '')}
-                print(data_dict)
+                data_dict = {"Name": col[1].find_all('a')[1].contents[0],
+                             "MC_USD_Billion": col[2].contents[0].replace('\n', '')}
                 df1 = pd.DataFrame(data_dict, index=[0])
                 df = pd.concat([df, df1], ignore_index=True)
+    return df
+
+
+'''
+Esta função acessa o arquivo CSV para informações sobre taxas de câmbio e 
+adiciona três colunas ao dataframe, cada uma contendo a versão transformada 
+da coluna Market Cap para as respectivas moedas.
+'''
+
+
+def transform(df, url):
+    dataframe = pd.read_csv(url)
+    exchange_rate = dataframe.set_index('Currency')['Rate'].to_dict()
+    gdp_list = df["MC_USD_Billion"].tolist()
+    gdp_list = [float("".join(x.split(','))) for x in gdp_list]
+    df['MC_GBP_Billion'] = [np.round(x * exchange_rate['GBP'], 2) for x in gdp_list]
+    df['MC_EUR_Billion'] = [np.round(x * exchange_rate['EUR'], 2) for x in gdp_list]
+    df['MC_INR_Billion'] = [np.round(x * exchange_rate['INR'], 2) for x in gdp_list]
+    df["MC_USD_Billion"] = gdp_list
     return df
