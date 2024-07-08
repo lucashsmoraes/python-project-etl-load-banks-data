@@ -22,7 +22,7 @@ Detalhes do código a ser criado abaixo:
 | Arquivo de log                         | `code_log.txt`                                                                                    |
 
 ## Tarefa 1
-Escreva uma função ´log_progress()´ para registrar o progresso do código em diferentes estágios em um arquivo `code_log.txt`.
+Escreva uma função `log_progress()` para registrar o progresso do código em diferentes estágios em um arquivo `code_log.txt`.
 
 ## Tarefa 2
 Extraia as informações tabulares da URL fornecida sob o título `By market capitalization` e salve em um dataframe.
