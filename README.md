@@ -2,7 +2,8 @@
 
 ## Objetivo do Projeto
 
-Este projeto visa desenvolver um sistema automatizado para compilar uma lista dos 10 maiores bancos do mundo, classificados por capitalização de mercado em bilhões de dólares. Além disso, os dados devem ser convertidos e armazenados em diferentes moedas (GBP, EUR e INR) com base em informações de taxa de câmbio fornecidas em um arquivo CSV. O objetivo é preparar esses dados trimestralmente e salvar os resultados em formatos CSV e em uma tabela de banco de dados.
+Este projeto visa desenvolver um sistema automatizado para compilar uma lista dos 10 maiores bancos do mundo, classificados por capitalização de mercado em bilhões de dólares. Além disso, os dados devem ser convertidos e armazenados em diferentes moedas (GBP, EUR e INR) com base em informações de taxa de câmbio fornecidas em um arquivo CSV. 
+O objetivo é preparar esses dados trimestralmente e salvar os resultados em formatos CSV e em uma tabela de banco de dados.
 
 ## Cenário
 
