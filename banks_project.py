@@ -36,7 +36,7 @@ def extract(url, table_attribs):
         if len(col) != 0:
             if col[1].find('a') is not None and '—' not in col[2]:
                 data_dict = {"Name": col[1].find_all('a')[1].contents[0],
-                             "MC_USD_Billion": col[2].contents[0].replace('\n', '')}
+                             "MC_USD_Billion": float(col[2].contents[0][:-1])}
                 df1 = pd.DataFrame(data_dict, index=[0])
                 df = pd.concat([df, df1], ignore_index=True)
     return df
@@ -49,15 +49,12 @@ da coluna Market Cap para as respectivas moedas.
 '''
 
 
-def transform(df, url):
-    dataframe = pd.read_csv(url)
+def transform(df, csv_path):
+    dataframe = pd.read_csv(csv_path)
     exchange_rate = dataframe.set_index('Currency')['Rate'].to_dict()
-    gdp_list = df["MC_USD_Billion"].tolist()
-    gdp_list = [float("".join(x.split(','))) for x in gdp_list]
-    df['MC_GBP_Billion'] = [np.round(x * exchange_rate['GBP'], 2) for x in gdp_list]
-    df['MC_EUR_Billion'] = [np.round(x * exchange_rate['EUR'], 2) for x in gdp_list]
-    df['MC_INR_Billion'] = [np.round(x * exchange_rate['INR'], 2) for x in gdp_list]
-    df["MC_USD_Billion"] = gdp_list
+    df['MC_GBP_Billion'] = [np.round(x * exchange_rate['GBP'], 2) for x in df["MC_USD_Billion"]]
+    df['MC_EUR_Billion'] = [np.round(x * exchange_rate['EUR'], 2) for x in df["MC_USD_Billion"]]
+    df['MC_INR_Billion'] = [np.round(x * exchange_rate['INR'], 2) for x in df["MC_USD_Billion"]]
     return df
 
 
@@ -67,5 +64,27 @@ no caminho fornecido. A função não retorna nada.
 '''
 
 
-def load_to_csv(df, csv_path):
-    df.to_csv(csv_path)
+def load_to_csv(df, output_path):
+    df.to_csv(output_path)
+
+
+'''
+Função responsável por salvar o dataframe final na tabela do banco de dados
+com o nome fornecido. A função não retorna nada
+'''
+
+
+def load_to_db(df, sql_connection, table_name):
+    df.to_sql(table_name, sql_connection, if_exists='replace', index=False)
+
+
+'''
+Função responsável por fazer consulta na tabela do banco de dados e
+imprime a saída no terminal. A função não retorna nada
+'''
+
+
+def run_query(query_statement, sql_connection):
+    print(query_statement)
+    query_output = pd.read_sql_query(query_statement, sql_connection)
+    print(query_output)
